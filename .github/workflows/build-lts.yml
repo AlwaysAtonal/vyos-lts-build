@@ -1,0 +1,76 @@
+name: VyOS LTS Build
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      # For VyOS 1.4 (sagitta) use vyos/vyos-build:sagitta
+      # For our VyOS rolling release you should use vyos/vyos-build which will always refer to the latest image.
+      # Ref: https://docs.vyos.io/en/latest/contributing/build-vyos.html#build
+      image: vyos/vyos-build:sagitta
+      env:
+        TZ: Asia/Shanghai
+      options: --privileged
+
+    steps:
+    - name: Set env
+      run: |
+        echo "RELEASE_VERSION=${GITHUB_REF:10}" >> $GITHUB_ENV 
+    - name: git clone vyos-build
+      run: |
+        set -eux
+        git clone -b ${{ env.RELEASE_VERSION }} --single-branch https://github.com/vyos/vyos-build
+    - name: clean env
+      working-directory: vyos-build
+      run: |
+        set -eux
+        sudo make clean
+    - name: make iso
+      working-directory: vyos-build
+      run: |
+        set -eux
+        sudo ./build-vyos-image iso \
+        --architecture amd64 \
+        --version ${{ env.RELEASE_VERSION }} \
+        --build-by "ace@omegai.cc" \
+        --build-type release \
+    - name: ls
+      run: |
+        set -eux
+        pwd
+        ls -lah
+        ls -lah vyos-build/build
+      
+    - uses: actions/create-release@master
+      id: create_release # 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: VyOS ${{ github.ref }} LTS
+        body: |
+          VyOS ${{ env.RELEASE_VERSION }} LTS
+        draft: true
+        prerelease: true
+
+    - uses: actions/upload-release-asset@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # 
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        # 
+        asset_path: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        # 
+        asset_name: vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        # 
+        asset_content_type: application/x-iso9660-image
+        
+        
+    
+      
