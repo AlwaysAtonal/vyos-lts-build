@@ -55,8 +55,8 @@ jobs:
         release_name: VyOS ${{ env.RELEASE_VERSION }} LTS
         body: |
           VyOS ${{ env.RELEASE_VERSION }} LTS
-        draft: true
-        prerelease: true
+        draft: false
+        prerelease: false
 
     - uses: actions/upload-release-asset@master
       env:
