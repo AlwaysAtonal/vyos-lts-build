@@ -21,6 +21,7 @@ jobs:
     - name: Set env
       run: |
         echo "RELEASE_VERSION=1.4.0-epa2" >> $GITHUB_ENV 
+        echo "BUILD_BY=ace@omegai.cc" >> $GITHUB_ENVV
     - name: git clone vyos-build
       run: |
         set -eux
@@ -37,7 +38,7 @@ jobs:
         sudo ./build-vyos-image iso \
         --architecture amd64 \
         --version ${{ env.RELEASE_VERSION }} \
-        --build-by "ace@omegai.cc" \
+        --build-by ${{ env.BUILD_BY }} \
         --build-type release \
     - name: ls
       run: |
