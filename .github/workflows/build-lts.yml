@@ -29,6 +29,7 @@ jobs:
         git clone -b ${{ env.RELEASE_VERSION }} --single-branch https://github.com/vyos/vyos-build
         cd vyos-build
         git checkout -b build-branch
+        cd ..
     - name: clean env
       working-directory: vyos-build
       run: |
