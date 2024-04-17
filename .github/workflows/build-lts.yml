@@ -18,14 +18,14 @@ jobs:
       options: --privileged
 
     steps:
-    - name: set env
-      run: |
-        echo "RELEASE_VERSION=1.4.0-epa2" >> $GITHUB_ENV 
-        echo "BUILD_BY=ace@omegai.cc" >> $GITHUB_ENVV
+    # - name: set env
+    #   run: |
+    #     echo "RELEASE_VERSION=1.4.0-epa2" >> $GITHUB_ENV 
+    #     echo "BUILD_BY=ace@omegai.cc" >> $GITHUB_ENVV
     - name: git clone vyos-build
       run: |
         set -eux
-        git clone -b ${{ env.RELEASE_VERSION }} --single-branch https://github.com/vyos/vyos-build
+        git clone -b 1.4.0-epa2 --single-branch https://github.com/vyos/vyos-build
     - name: clean env
       working-directory: vyos-build
       run: |
@@ -37,8 +37,8 @@ jobs:
         set -eux
         sudo ./build-vyos-image iso \
         --architecture amd64 \
-        --version ${{ env.RELEASE_VERSION }} \
-        --build-by ${{ env.BUILD_BY }} \
+        --version 1.4.0-epa2 \
+        --build-by ace@omegai.cc \
         --build-type release \
     - name: ls
       run: |
@@ -52,10 +52,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.RELEASE_VERSION }}
-        release_name: VyOS ${{ env.RELEASE_VERSION }} LTS
+        tag_name: 1.4.0-epa2
+        release_name: VyOS 1.4.0-epa2 LTS
         body: |
-          VyOS ${{ env.RELEASE_VERSION }} LTS
+          VyOS 1.4.0-epa2 LTS
         draft: false
         prerelease: false
 
@@ -64,8 +64,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: vyos-build/build/vyos-${{ env.RELEASE_VERSION }}-amd64.iso
-        asset_name: vyos-${{ env.RELEASE_VERSION }}-amd64.iso
+        asset_path: vyos-build/build/vyos-1.4.0-epa2-amd64.iso
+        asset_name: vyos-1.4.0-epa2-amd64.iso
         asset_content_type: application/x-iso9660-image
         
         
