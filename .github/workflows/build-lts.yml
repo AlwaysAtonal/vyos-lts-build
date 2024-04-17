@@ -27,7 +27,6 @@ jobs:
         set -eux
         git config --global advice.detachedHead false
         git clone -b 1.4.0-epa2 --single-branch https://github.com/vyos/vyos-build
-        git switch -c 016809208da4d5500734f275d544463d8122bbd1
     - name: clean env
       working-directory: vyos-build
       run: |
