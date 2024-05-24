@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: set env
       run: |
-        echo "RELEASE_VERSION=1.4.0-epa2" >> $GITHUB_ENV 
+        echo "RELEASE_VERSION=1.4.0-epa3" >> $GITHUB_ENV 
         echo "BUILD_BY=ace@omegai.cc" >> $GITHUB_ENV
     - name: git clone vyos-build
       run: |
